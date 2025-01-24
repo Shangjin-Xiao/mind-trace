@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DatabaseService()),
       ],
       child: MaterialApp(
-        title: '每日一言',
+        title: '心迹 Mind Trace',
         debugShowCheckedModeBanner: false,  // 移除调试标签
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(

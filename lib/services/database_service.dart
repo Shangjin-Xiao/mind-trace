@@ -19,7 +19,7 @@ class DatabaseService extends ChangeNotifier {
     try {
       final path = await getDatabasesPath();
       _db = await openDatabase(
-        join(path, 'daily_quotes.db'),
+        join(path, 'mind_trace.db'),
         onCreate: (db, version) async {
           await db.execute(
             'CREATE TABLE quotes(id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, content TEXT)',
@@ -57,4 +57,4 @@ class DatabaseService extends ChangeNotifier {
       return [];
     }
   }
-} 
+}

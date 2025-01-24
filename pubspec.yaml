@@ -1,5 +1,5 @@
-name: daily_quote
-description: 一个每日一言的 Flutter 应用
+name: mind_trace
+description: A daily journal app to trace your mind and thoughts
 
 publish_to: 'none'
 
@@ -26,4 +26,4 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 flutter:
-  uses-material-design: true 
+  uses-material-design: true
