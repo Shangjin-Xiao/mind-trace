@@ -7,24 +7,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:daily_quote/main.dart';
+import 'package:mind_trace/main.dart';
+import 'package:mind_trace/services/settings_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Mind Trace App Test', (WidgetTester tester) async {
+    // 初始化设置服务并等待异步操作完成
+    final settingsService = SettingsService();
+    await settingsService.init();
+    
+    // 构建应用程序并等待所有异步操作完成
+    await tester.pumpWidget(MyApp(settingsService: settingsService));
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // 验证应用程序标题是否正确显示
+    expect(find.text('心迹'), findsOneWidget);
   });
 }

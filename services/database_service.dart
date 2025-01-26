@@ -15,6 +15,11 @@ class DatabaseService extends ChangeNotifier {
   }
 
   static Future<void> init() async {
+    if (kIsWeb) {
+      // Web平台暂不初始化数据库
+      return;
+    }
+
     if (_db != null) return;
 
     try {
@@ -35,6 +40,10 @@ class DatabaseService extends ChangeNotifier {
   }
 
   Future<void> saveUserQuote(String content) async {
+    if (kIsWeb) {
+      // Web平台使用其他存储方式或暂不支持
+      return;
+    }
     try {
       final quote = Quote(
         date: DateTime.now().toIso8601String(),
@@ -50,6 +59,10 @@ class DatabaseService extends ChangeNotifier {
   }
 
   Future<List<Quote>> getAllQuotes() async {
+    if (kIsWeb) {
+      // Web平台返回空列表
+      return [];
+    }
     try {
       final List<Map<String, dynamic>> maps = await database.query('quotes', orderBy: 'date DESC');
       return maps.map((map) => Quote.fromMap(map)).toList();

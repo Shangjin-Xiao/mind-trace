@@ -1,35 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:io';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'services/database_service.dart';
+import 'services/ai_service.dart';
+import 'services/settings_service.dart';
 import 'pages/home_page.dart';
 
-Future<void> initializeApp() async {
+Future<SettingsService> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Web 平台不需要初始化 SQLite
-  if (!kIsWeb) {
-    await DatabaseService.init();
+
+  // 仅在Windows平台初始化SQLite
+  if (!kIsWeb && Platform.isWindows) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
   }
+
+  await DatabaseService.init();
+  final settingsService = SettingsService();
+  await settingsService.init();
+
+  return settingsService;
 }
 
 void main() async {
   try {
-    await initializeApp();
-    runApp(const MyApp());
+    final settingsService = await initializeApp();
+    runApp(MyApp(settingsService: settingsService));
   } catch (e) {
     debugPrint('应用程序启动错误: $e');
+    runApp(MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('应用启动错误: $e'),
+        ),
+      ),
+    ));
   }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final SettingsService settingsService;
+
+  const MyApp({super.key, required this.settingsService});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: settingsService),
         ChangeNotifierProvider(create: (_) => DatabaseService()),
+        ChangeNotifierProvider(
+          create: (context) => AIService(
+            settingsService: context.read<SettingsService>(),
+          ),
+        ),
       ],
       child: MaterialApp(
         title: '心迹 Mind Trace',

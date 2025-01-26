@@ -5,14 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/app.js",
+            "name": "mind-trace",
             "request": "launch",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "type": "node"
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--web-port", "5000"
+            ]
+        },
+        {
+            "name": "mind-trace (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "mind-trace (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
         }
-
     ]
 }

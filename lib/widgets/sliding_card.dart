@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SlidingCard extends StatefulWidget {
-  final List<Widget> pages;
+  final Widget child;
+  final VoidCallback onSlideComplete;
 
   const SlidingCard({
     Key? key,
-    required this.pages,
+    required this.child,
+    required this.onSlideComplete,
   }) : super(key: key);
 
   @override
@@ -14,7 +16,7 @@ class SlidingCard extends StatefulWidget {
 
 class _SlidingCardState extends State<SlidingCard> {
   final PageController _pageController = PageController();
-  int _currentPage = 0;
+  bool _hasCompletedSlide = false;
 
   @override
   void dispose() {
@@ -26,40 +28,52 @@ class _SlidingCardState extends State<SlidingCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
-    return Column(
+    return PageView(
+      controller: _pageController,
+      onPageChanged: (index) {
+        if (index == 1 && !_hasCompletedSlide) {
+          _hasCompletedSlide = true;
+          widget.onSlideComplete();
+        }
+      },
       children: [
-        Expanded(
-          child: PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentPage = index;
-              });
-            },
-            children: widget.pages,
-          ),
-        ),
+        // 第一页：显示每日一言
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              widget.pages.length,
-              (index) => AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: _currentPage == index ? 24 : 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: _currentPage == index
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.primary.withOpacity(0.3),
-                ),
+          padding: const EdgeInsets.all(24),
+          child: Card(
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.format_quote, size: 40),
+                  const SizedBox(height: 16),
+                  widget.child,
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.arrow_forward,
+                        color: theme.colorScheme.primary.withOpacity(0.5),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '向左滑动记录感想',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary.withOpacity(0.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
         ),
+        // 第二页：空白页，用于触发回调
+        Container(),
       ],
     );
   }

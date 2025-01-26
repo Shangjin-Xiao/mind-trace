@@ -1,24 +1,23 @@
 name: mind_trace
-description: A daily journal app to trace your mind and thoughts
+description: "A daily quote app for mindfulness"
 
 publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.5
   sqflite: ^2.3.0
+  sqflite_common_ffi: ^2.3.0  # 仅用于Windows平台
   path: ^1.8.3
   http: ^1.1.0
   cupertino_icons: ^1.0.2
-  sqflite_common_ffi: ^2.3.0
-  sqlite3_flutter_libs: ^0.5.0
-  shared_preferences: ^2.2.0
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
