@@ -242,19 +242,19 @@ class _NoteFullEditorPageState extends State<NoteFullEditorPage> {
         '笔记内容长度: ${quote.content.length}, 富文本长度: ${quote.deltaContent?.length ?? 0}',
       );
 
-      if (widget.initialQuote != null) {
-        // 更新现有笔记
+      if (widget.initialQuote != null && widget.initialQuote?.id != null) {
+        // 只有当initialQuote存在且有ID时，才更新现有笔记
         debugPrint('更新现有笔记，ID: ${quote.id}');
         await db.updateQuote(quote);
         if (mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('笔记已更新')));
+          ).showSnackBar(const SnackBar(content: Text('笔记已保存')));
           // 成功更新后，关闭页面并返回
           Navigator.of(context).pop(true); // 返回true表示更新成功
         }
       } else {
-        // 添加新笔记
+        // 添加新笔记（初始Quote为null或无ID时）
         debugPrint('添加新笔记');
         await db.addQuote(quote);
         if (mounted) {

@@ -469,7 +469,10 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
                                 final allTags =
                                     await databaseService.getCategories();
 
-                                // 不再创建临时Quote对象，而是直接传递所需的内容，以便让全屏编辑器使用addQuote方法
+                                // 不再创建临时Quote对象，而是直接传递null，确保全屏编辑器使用addQuote方法
+                                // 获取当前输入的内容和元数据，但不创建Quote对象
+                                // 不传递initialQuote，这样全屏编辑器会使用addQuote逻辑
+
                                 final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -478,7 +481,7 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
                                           initialContent:
                                               _contentController.text,
                                           initialQuote:
-                                              null, // 传递null，确保使用addQuote方法
+                                              null, // 传递null而不是临时Quote对象
                                           allTags: allTags,
                                         ),
                                   ),
