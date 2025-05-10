@@ -164,13 +164,24 @@ class _NoteFullEditorPageState extends State<NoteFullEditorPage> {
   Future<void> _saveContent() async {
     final db = Provider.of<DatabaseService>(context, listen: false);
 
+    debugPrint('开始保存笔记内容...');
+
     // 获取纯文本内容
     String plainTextContent = '';
     String deltaJson = '';
 
     try {
       plainTextContent = _controller.document.toPlainText().trim();
-      deltaJson = jsonEncode(_controller.document.toDelta().toJson());
+      debugPrint('获取到纯文本内容: ${plainTextContent.length} 字符');
+
+      final delta = _controller.document.toDelta();
+      debugPrint('Delta内容长度: ${delta.length}');
+
+      deltaJson = jsonEncode(delta.toJson());
+      debugPrint('富文本JSON长度: ${deltaJson.length}');
+      debugPrint(
+        '富文本JSON内容示例: ${deltaJson.substring(0, min(100, deltaJson.length))}...',
+      );
     } catch (e) {
       debugPrint('获取文档内容失败: $e');
       // 显示错误但继续尝试保存
@@ -224,8 +235,16 @@ class _NoteFullEditorPageState extends State<NoteFullEditorPage> {
     );
 
     try {
+      debugPrint(
+        '保存笔记: ID=${quote.id}, 是否为更新模式=${widget.initialQuote != null}',
+      );
+      debugPrint(
+        '笔记内容长度: ${quote.content.length}, 富文本长度: ${quote.deltaContent?.length ?? 0}',
+      );
+
       if (widget.initialQuote != null) {
         // 更新现有笔记
+        debugPrint('更新现有笔记，ID: ${quote.id}');
         await db.updateQuote(quote);
         if (mounted) {
           ScaffoldMessenger.of(
@@ -236,6 +255,7 @@ class _NoteFullEditorPageState extends State<NoteFullEditorPage> {
         }
       } else {
         // 添加新笔记
+        debugPrint('添加新笔记');
         await db.addQuote(quote);
         if (mounted) {
           ScaffoldMessenger.of(
@@ -701,7 +721,7 @@ class _NoteFullEditorPageState extends State<NoteFullEditorPage> {
               child: Container(
                 color: theme.colorScheme.surface,
                 padding: const EdgeInsets.all(16),
-                // 使用简单的编辑器配置，确保能正常编辑和保存
+                // 使用基础编辑器配置，确保能正常编辑和保存
                 child: quill.QuillEditor.basic(controller: _controller),
               ),
             ),
