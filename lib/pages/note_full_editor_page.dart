@@ -525,6 +525,15 @@ class _NoteFullEditorPageState extends State<NoteFullEditorPage> {
                                   ? null
                                   : '#${advancedColor.value.toRadixString(16).substring(2)}';
                         });
+
+                        // 确保UI立即更新以反映颜色变化
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) {
+                            setState(() {
+                              // 强制重建UI
+                            });
+                          }
+                        });
                       }
                     },
                   ),
@@ -553,6 +562,15 @@ class _NoteFullEditorPageState extends State<NoteFullEditorPage> {
             result == Colors.transparent
                 ? null
                 : '#${result.value.toRadixString(16).substring(2)}';
+      });
+
+      // 额外调用setState以确保UI立即更新
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            // 强制重建UI以反映颜色变化
+          });
+        }
       });
     }
   }
