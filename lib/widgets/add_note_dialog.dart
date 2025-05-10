@@ -469,18 +469,7 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
                                 final allTags =
                                     await databaseService.getCategories();
 
-                                // 创建临时Quote对象
-                                final tempQuote = Quote(
-                                  id: const Uuid().v4(),
-                                  content: _contentController.text,
-                                  date: DateTime.now().toIso8601String(),
-                                  sourceAuthor: _authorController.text,
-                                  sourceWork: _workController.text,
-                                  tagIds: _selectedTagIds,
-                                  colorHex: _selectedColorHex,
-                                  editSource: 'fullscreen',
-                                );
-
+                                // 不再创建临时Quote对象，而是直接传递所需的内容，以便让全屏编辑器使用addQuote方法
                                 final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -488,7 +477,8 @@ class _AddNoteDialogState extends State<AddNoteDialog> {
                                         (context) => NoteFullEditorPage(
                                           initialContent:
                                               _contentController.text,
-                                          initialQuote: tempQuote,
+                                          initialQuote:
+                                              null, // 传递null，确保使用addQuote方法
                                           allTags: allTags,
                                         ),
                                   ),
