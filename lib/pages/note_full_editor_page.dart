@@ -683,18 +683,8 @@ class _NoteFullEditorPageState extends State<NoteFullEditorPage> {
               child: Container(
                 color: theme.colorScheme.surface,
                 padding: const EdgeInsets.all(16),
-                // 使用与 QuoteContent 组件相似的配置，但允许编辑
-                child: quill.QuillEditor.basic(
-                  controller: _controller,
-                  config: const quill.QuillEditorConfig(
-                    // 编辑器需要可编辑，但其他配置保持一致
-                    autoFocus: false,
-                    expands: true, // 允许内容扩展填充可用空间
-                    padding: EdgeInsets.zero,
-                    scrollable: true, // 启用滚动，避免文本溢出
-                    placeholder: '',
-                  ),
-                ),
+                // 使用简单的编辑器配置，确保能正常编辑和保存
+                child: quill.QuillEditor.basic(controller: _controller),
               ),
             ),
           ],
